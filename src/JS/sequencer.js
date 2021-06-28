@@ -16,8 +16,14 @@ export class Sequencer extends SvelteUpdatable {
         this.isPlaying = false;
         this.loopPlayback = false;
 
-        // Define the interval between steps in ms
+        // Define the target interval between steps in ms
         this.tempo = 60000 / this.bpm;
+
+        // Define a variable to track the error in sequence timing
+        this.deltaT = 0;
+
+        // Define the interval to be used in step sequencing
+        this.interval = this.tempo - this.deltaT;
 
         // Create a step for each beat
         this.steps = [];
@@ -92,6 +98,7 @@ export class Sequencer extends SvelteUpdatable {
     playSequence = () => {  
 
         this.isPlaying = true;
+        const startTime = performance.now();
 
         // Start at the first step if playback was not paused previously
         if (!this.currentStepNumber) {
@@ -103,30 +110,33 @@ export class Sequencer extends SvelteUpdatable {
          
         this.liveSequence = setInterval(() => { 
 
+            // Calculate the error in the interval timing and pass it to deltaT
+            const timeElapsed = performance.now() - startTime;
+            this.deltaT = timeElapsed - (this.currentStepNumber * this.tempo);
+            console.log(timeElapsed);
+
             // Play current step and move onto the next in the sequence   
            this.playBeat(this.currentStepNumber);
            this.currentStepNumber++;
 
             // Stop counting up the steps once we have reached the total number of beats
-           if (this.currentStepNumber === this.numberOfBeats) {
+           if (this.currentStepNumber > this.numberOfBeats) {
 
                // If looping is on, reset to the start of the sequence
                 if (this.loopPlayback) {
-                    setTimeout(()=> {this.currentStepNumber = 1}, this.tempo);
+                    setTimeout(()=> {this.currentStepNumber = 1}, this.interval);
 
                 // Else stop the playback
                 } else {
-                    clearInterval(this.liveSequence);
-                    this.currentStepNumber = null;
-                    this.isPlaying = false;
+                    this.stopPlayback();
                 }
             
             // Manually call updateUI method to see changes reflected in the UI
             this.updateUI();
            }
 
-        // Define the interval between each step as the tempo
-        }, this.tempo);
+        // Use calculated interval between each step
+        }, this.interval);
     }
 
     // Stop the playback and reset the current step number
@@ -135,6 +145,7 @@ export class Sequencer extends SvelteUpdatable {
             clearInterval(this.liveSequence);
             this.currentStepNumber = null;
             this.isPlaying = false;
+            this.deltaT = 0;
 
             // Manually call updateUI method to see changes reflected in the UI
             this.updateUI();
