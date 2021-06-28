@@ -1,5 +1,6 @@
 import { get } from 'svelte/store';
 import { sequencerOptions } from '../Store/store.js'
+import { IntervalTimer } from './timer.js'
 import { Step } from './step.js'
 import { SvelteUpdatable } from './svelteUpdatable.js'
 
@@ -11,28 +12,17 @@ export class Sequencer extends SvelteUpdatable {
         this.numberOfBeats = get(sequencerOptions).numberOfBeats;
         this.bpm = get(sequencerOptions).bpm;
 
-        // Define variables to track live playback and whether looping is selected
-        this.currentStepNumber = null;
-        this.isPlaying = false;
-        this.loopPlayback = false;
-
         // Define the target interval between steps in ms
         this.tempo = 60000 / this.bpm;
 
-        // Define a variable to track the error in sequence timing
-        this.deltaT = 0;
-
-        // Define the interval to be used in step sequencing
-        this.interval = this.tempo - this.deltaT;
+        // Set up a timer to run the sequence
+        this.intervalTimer = new IntervalTimer(this.bpm, this.numberOfBeats);
 
         // Create a step for each beat
         this.steps = [];
         for (let i = 0; i < this.numberOfBeats; i++) {
             this.steps.push(new Step(i + 1));
         }
-
-        // Define variable to playback the sequence that can be played/stopped/paused
-        this.liveSequence = null;
     }
 
     // Toggle on/off whether audio is to be played for a given step
@@ -45,7 +35,7 @@ export class Sequencer extends SvelteUpdatable {
 
     // Toggle on/off looping of playback
     toggleLooping = () => {
-        this.loopPlayback = !this.loopPlayback;
+        this.intervalTimer.loopPlayback = !this.intervalTimer.loopPlayback;
 
         // Manually call updateUI method to see changes reflected in the UI
         this.updateUI();
@@ -58,13 +48,13 @@ export class Sequencer extends SvelteUpdatable {
 
     // Function to tell UI whether playback is in progress or not
     playbackInProgress = () => {
-        return this.isPlaying;
+        return this.intervalTimer.isPlaying;
     }
 
     // Update the BPM whenever the value is changed in the UI
     updateBPM = () => {
         this.bpm = get(sequencerOptions).bpm;
-        this.tempo = 60000 / this.bpm;
+        this.intervalTimer.tempo = 60000 / this.bpm;
     }
 
     // Update the array of steps whenever number of beats is altered in the UI
@@ -74,6 +64,7 @@ export class Sequencer extends SvelteUpdatable {
 
         // Get the new value
         this.numberOfBeats = get(sequencerOptions).numberOfBeats;
+        this.intervalTimer.numberOfSteps = this.numberOfBeats;
 
         // Add or remove steps from the array as required
         if (oldNumberOfBeats > this.numberOfBeats) {
@@ -92,75 +83,31 @@ export class Sequencer extends SvelteUpdatable {
     // Play the beat for a given step number in the sequence
     playBeat = (stepNumber) => {
        this.steps[stepNumber - 1].playStep();
+
+       // Manually call updateUI method to see changes reflected in the UI
+       this.updateUI();
     }
 
     // Play the entire sequence of steps
     playSequence = () => {  
-
-        this.isPlaying = true;
-        const startTime = performance.now();
-
-        // Start at the first step if playback was not paused previously
-        if (!this.currentStepNumber) {
-            this.currentStepNumber = 1; 
-        }
+        this.intervalTimer.runSteps(this.playBeat);
 
         // Manually call updateUI method to see changes reflected in the UI
         this.updateUI();
-         
-        this.liveSequence = setInterval(() => { 
-
-            // Calculate the error in the interval timing and pass it to deltaT
-            const timeElapsed = performance.now() - startTime;
-            this.deltaT = timeElapsed - (this.currentStepNumber * this.tempo);
-            console.log(timeElapsed);
-
-            // Play current step and move onto the next in the sequence   
-           this.playBeat(this.currentStepNumber);
-           this.currentStepNumber++;
-
-            // Stop counting up the steps once we have reached the total number of beats
-           if (this.currentStepNumber > this.numberOfBeats) {
-
-               // If looping is on, reset to the start of the sequence
-                if (this.loopPlayback) {
-                    setTimeout(()=> {this.currentStepNumber = 1}, this.interval);
-
-                // Else stop the playback
-                } else {
-                    this.stopPlayback();
-                }
-            
-            // Manually call updateUI method to see changes reflected in the UI
-            this.updateUI();
-           }
-
-        // Use calculated interval between each step
-        }, this.interval);
     }
 
-    // Stop the playback and reset the current step number
     stopPlayback = () => {
-        if (this.liveSequence) {
-            clearInterval(this.liveSequence);
-            this.currentStepNumber = null;
-            this.isPlaying = false;
-            this.deltaT = 0;
+        this.intervalTimer.stopPlayback();
 
-            // Manually call updateUI method to see changes reflected in the UI
-            this.updateUI();
-        }
+        // Manually call updateUI method to see changes reflected in the UI
+        this.updateUI();
     }
 
-    // Stop playback but keep current value of this.currentStepNumber so playback can be continued from that step
     pausePlayback = () => {
-        if (this.liveSequence) {
-            clearInterval(this.liveSequence);
-            this.isPlaying = false;
+        this.intervalTimer.pausePlayback();
 
-            // Manually call updateUI method to see changes reflected in the UI
-            this.updateUI();
-        }
+        // Manually call updateUI method to see changes reflected in the UI
+        this.updateUI();
     }
 
 }
