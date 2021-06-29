@@ -41,6 +41,18 @@ export class Sequencer extends SvelteUpdatable {
         this.updateUI();
     }
 
+    // Remove all active beats from the sequence
+    clearSequence = () => {
+        this.steps.forEach(step => {
+            for (const instrument of Object.keys(step.playCommands)) {
+                step.playCommands[instrument] = false;
+            }
+        });
+
+        // Manually call updateUI method to see changes reflected in the UI
+        this.updateUI();
+    }
+
     // Function to control whether the UI is to display "selected" colour or not
     displayActiveUI = (instrument, stepNumber) => {
         return this.steps[stepNumber - 1].playCommands[instrument];
