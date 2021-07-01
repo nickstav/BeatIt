@@ -12,7 +12,7 @@
 	}
 </style>
 
-<div id="beatRow" class="flex flex-row w-full h-8 justify-start items-center">
+<div id="beatRow" class="flex flex-row w-full h-10 justify-start items-center">
 
     <div 
     id="soundIcon" 
@@ -32,5 +32,3 @@
 	{/each}
 
 </div>
-
-<hr class="h-2">
