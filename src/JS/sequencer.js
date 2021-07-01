@@ -68,7 +68,7 @@ export class Sequencer extends SvelteUpdatable {
     // Update the BPM whenever the value is changed in the UI
     updateBPM = () => {
         this.bpm = get(sequencerOptions).bpm;
-        this.intervalTimer.tempo = 60000 / this.bpm;
+        this.intervalTimer.tempo = 60000 / this.bpm / 4;
     }
 
     // Update the array of steps whenever number of beats is altered in the UI
