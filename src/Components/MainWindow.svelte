@@ -12,7 +12,7 @@
         <div id="indent" class="h-8 w-8 flex items-center justify-center"></div>
     
         {#each $beatsArray as i}
-		    <div id="number" class="ml-2 w-6 h-6 text-xs text-white flex items-center justify-center {$stepSequencer.intervalTimer.currentStepNumber === i + 1 ? "bg-red-500 rounded-2xl" : ""}">
+		    <div id="number" class="ml-2 w-6 h-6 text-xs text-white flex items-center justify-center {$stepSequencer.intervalTimer.currentStepNumber === i ? "bg-red-500 rounded-2xl" : ""}">
                 {i + 1}
             </div>
 	    {/each}
