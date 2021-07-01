@@ -78,7 +78,7 @@ export class Sequencer extends SvelteUpdatable {
 
         // Get the new value
         this.numberOfSteps = get(sequencerOptions).numberOfBeats * 4;
-        this.intervalTimer.numberOfSteps = this.numberOfSteps;
+        this.intervalTimer.lastStepNumber = this.numberOfSteps - 1;
 
         // Add or remove steps from the array as required
         if (oldNumberOfSteps < this.numberOfSteps) {
