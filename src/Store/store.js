@@ -1,28 +1,38 @@
 import { writable, derived } from 'svelte/store';
+import { instruments } from '../JS/instruments';
 
 const defaultValues = {
     numberOfBeats: 4,
     bpm: 120,
-    showOptions: false
+    selectedTrack: null
 };
 
 function setUpStore() {
 
     const { subscribe, set, update } = writable(defaultValues);
 
-    function toggleOptionsMenu() {
+    function toggleTrackSelection(track) {
         update(status => {
-            return {
-                ...status,
-                showOptions: !status.showOptions
-            };
+            if (status.selectedTrack != instruments[track]['label']) {
+
+                return {
+                    ...status,
+                    selectedTrack: instruments[track]['label']
+                };
+
+            } else {
+                return {
+                    ...status,
+                    selectedTrack: null
+                };
+            }
         });
     }
 
     return {
 	    subscribe,
         set,
-        toggleOptionsMenu
+        toggleTrackSelection
     };
 
 }
