@@ -1,8 +1,8 @@
 export class IntervalTimer {
-    constructor(stepsPerMinute, numberOfSteps) {
+    constructor(beatsPerMinute, numberOfSteps) {
 
         // Get the number of required steps and the tempo (time between steps)
-        this.tempo = 60000 / stepsPerMinute / 4;
+        this.tempo = 60000 / beatsPerMinute / 4;
         this.lastStepNumber = numberOfSteps - 1; // (as we start counting from 0 instead of 1)
         this.currentStepNumber = null;
 
