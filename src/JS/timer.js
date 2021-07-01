@@ -2,8 +2,8 @@ export class IntervalTimer {
     constructor(stepsPerMinute, numberOfSteps) {
 
         // Get the number of required steps and the tempo (time between steps)
-        this.tempo = 60000 / stepsPerMinute;
-        this.numberOfSteps = numberOfSteps;
+        this.tempo = 60000 / stepsPerMinute / 4;
+        this.lastStepNumber = numberOfSteps - 1; // (as we start counting from 0 instead of 1)
         this.currentStepNumber = null;
 
         // Define variables to track live playback and whether looping is selected
@@ -27,7 +27,7 @@ export class IntervalTimer {
 
         // Start at the first step if playback was not paused previously
         if (!this.currentStepNumber) {
-            this.currentStepNumber = 1; 
+            this.currentStepNumber = 0; 
         }
 
         this.liveSequence = setInterval(() => {
@@ -37,11 +37,11 @@ export class IntervalTimer {
             this.currentStepNumber++;
 
             // Stop counting up the steps once we have reached the total number of beats
-           if (this.currentStepNumber > this.numberOfSteps) {
+           if (this.currentStepNumber > this.lastStepNumber) {
         
                // If looping is on, reset to the start of the sequence
                 if (this.loopPlayback) {
-                    this.currentStepNumber = 1;
+                    this.currentStepNumber = 0;
         
                 // Else stop the playback
                 } else {

@@ -25,7 +25,7 @@
     {#each $beatsArray as i}
 		<div 
         id="beat" 
-        class=" ml-2 w-6 h-6 rounded-lg bg-red-300 border border-red-400 text-xs flex items-center justify-center cursor-pointer {$stepSequencer.displayActiveUI(instrument, i) ? "bg-red-500 border border-red-600" : ""}"
+        class=" ml-2 w-6 h-6 rounded-lg bg-red-300 border border-red-400 text-xs flex items-center justify-center cursor-pointer {(i + 1) % 4 === 1 ? "bg-red-400 border border-red-500" : ""} {$stepSequencer.displayActiveUI(instrument, i) ? "bg-red-600 border border-red-600" : ""}"
         on:click={() => {stepSequencer.toggleAudio(instrument, i)}}
         >
         </div>

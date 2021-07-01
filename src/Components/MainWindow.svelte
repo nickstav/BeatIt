@@ -13,7 +13,7 @@
     
         {#each $beatsArray as i}
 		    <div id="number" class="ml-2 w-6 h-6 text-xs text-white flex items-center justify-center {$stepSequencer.intervalTimer.currentStepNumber === i ? "bg-red-500 rounded-2xl" : ""}">
-                {i}
+                {i + 1}
             </div>
 	    {/each}
 

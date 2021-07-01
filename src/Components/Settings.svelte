@@ -105,18 +105,18 @@
             <h2 class="font-bold text-white pb-2">number of beats</h2>
 
             <label for="8" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={8} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
-                8
+                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={2} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
+                2
             </label>
 
             <label for="16" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={16} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
-                16
+                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={4} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
+                4
             </label>
 
             <label for="32" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={32} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
-                32
+                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={8} on:change={stepSequencer.updateSteps} class="form-radio text-red-400 align-middle cursor-pointer">
+                8
             </label>
 
         </div>

@@ -9,25 +9,22 @@ export class Sequencer extends SvelteUpdatable {
         super()
 
         // Get number of beats and bpm from the store
-        this.numberOfBeats = get(sequencerOptions).numberOfBeats;
+        this.numberOfSteps = get(sequencerOptions).numberOfBeats * 4;
         this.bpm = get(sequencerOptions).bpm;
 
-        // Define the target interval between steps in ms
-        this.tempo = 60000 / this.bpm;
-
         // Set up a timer to run the sequence
-        this.intervalTimer = new IntervalTimer(this.bpm, this.numberOfBeats);
+        this.intervalTimer = new IntervalTimer(this.bpm, this.numberOfSteps);
 
         // Create a step for each beat
         this.steps = [];
-        for (let i = 0; i < this.numberOfBeats; i++) {
-            this.steps.push(new Step(i + 1));
+        for (let i = 0; i < this.numberOfSteps; i++) {
+            this.steps.push(new Step(i));
         }
     }
 
     // Toggle on/off whether audio is to be played for a given step
     toggleAudio = (instrument, stepNumber) => {
-        this.steps[stepNumber - 1].toggleAudio(instrument);
+        this.steps[stepNumber].toggleAudio(instrument);
 
         // Manually call updateUI method to see changes reflected in the UI
         this.updateUI();
@@ -55,7 +52,7 @@ export class Sequencer extends SvelteUpdatable {
 
     // Function to control whether the UI is to display "selected" colour or not
     displayActiveUI = (instrument, stepNumber) => {
-        return this.steps[stepNumber - 1].playCommands[instrument];
+        return this.steps[stepNumber].playCommands[instrument];
     }
 
     // Function to tell UI whether playback is in progress or not
@@ -72,29 +69,29 @@ export class Sequencer extends SvelteUpdatable {
     // Update the array of steps whenever number of beats is altered in the UI
     updateSteps = () => {
 
-        const oldNumberOfBeats = this.numberOfBeats;
+        const oldNumberOfSteps = this.numberOfSteps;
 
         // Get the new value
-        this.numberOfBeats = get(sequencerOptions).numberOfBeats;
-        this.intervalTimer.numberOfSteps = this.numberOfBeats;
+        this.numberOfSteps = get(sequencerOptions).numberOfBeats * 4;
+        this.intervalTimer.numberOfSteps = this.numberOfSteps;
 
         // Add or remove steps from the array as required
-        if (oldNumberOfBeats > this.numberOfBeats) {
+        if (oldNumberOfSteps < this.numberOfSteps) {
 
-            for (let i = oldNumberOfBeats; i < this.numberOfBeats; i++) {
-                this.steps.push(new Step(i + 1));
+            for (let i = oldNumberOfSteps; i < this.numberOfSteps; i++) {
+                this.steps.push(new Step(i));
             }
 
-        } else if (oldNumberOfBeats < this.numberOfBeats) {
+        } else if (oldNumberOfSteps > this.numberOfSteps) {
 
-            this.steps.splice(-1, (this.numberOfBeats - oldNumberOfBeats));
+            this.steps.splice(-1, (this.numberOfSteps - oldNumberOfSteps));
             
         }
     }
 
     // Play the beat for a given step number in the sequence
     playBeat = (stepNumber) => {
-       this.steps[stepNumber - 1].playStep();
+       this.steps[stepNumber].playStep();
 
        // Manually call updateUI method to see changes reflected in the UI
        this.updateUI();

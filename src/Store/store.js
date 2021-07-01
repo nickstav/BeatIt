@@ -1,7 +1,7 @@
 import { writable, derived } from 'svelte/store';
 
 const defaultValues = {
-    numberOfBeats: 16,
+    numberOfBeats: 4,
     bpm: 120,
     showOptions: false
 };
@@ -34,8 +34,8 @@ const beatsArray = derived(
     sequencerOptions,
     $sequencerOptions => {
         const beatArray = [];
-        for (let i = 0; i < $sequencerOptions.numberOfBeats; i++) {
-            beatArray.push(i + 1);
+        for (let i = 0; i < ($sequencerOptions.numberOfBeats * 4); i++) {
+            beatArray.push(i);
         }
         return beatArray;
     }
