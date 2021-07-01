@@ -52,7 +52,12 @@ export class Sequencer extends SvelteUpdatable {
 
     // Function to control whether the UI is to display "selected" colour or not
     displayActiveUI = (instrument, stepNumber) => {
-        return this.steps[stepNumber].playCommands[instrument];
+
+        // ensure UI updates *after* step has been created within the sequence
+        if (this.steps[stepNumber]) {
+            return this.steps[stepNumber].playCommands[instrument];
+        }
+
     }
 
     // Function to tell UI whether playback is in progress or not
