@@ -24,6 +24,7 @@ export class IntervalTimer {
 
         this.isPlaying = true;
         const startTime = performance.now();
+        let loopNumber = 1;
 
         // Start at the first step if playback was not paused previously
         if (!this.currentStepNumber) {
@@ -31,19 +32,6 @@ export class IntervalTimer {
         }
 
         this.liveSequence = setInterval(() => {
-
-            // Calculate the error in the interval timing and pass it to deltaT
-            const timeElapsed = performance.now() - startTime;
-            const targetTimeStamp = this.tempo * (this.currentStepNumber + 1);
-            this.deltaT = timeElapsed - targetTimeStamp;
-
-            // Track accuracy of the timer in the console
-            console.debug(
-                "Step number:" + (this.currentStepNumber + 1), '\n',
-                "Target step time:" + targetTimeStamp + "ms", '\n', 
-                "Actual step time:" + timeElapsed.toFixed(1) + "ms", '\n',
-                "Error:" + this.deltaT.toFixed(1) + "ms"
-            );
 
             // Carry out actionable function and move onto next step
             stepJobs(this.currentStepNumber);
@@ -55,6 +43,9 @@ export class IntervalTimer {
                // If looping is on, reset to the start of the sequence
                 if (this.loopPlayback) {
                     this.currentStepNumber = 0;
+
+                    this.calculateTimerAccuracy(startTime, loopNumber);
+                    loopNumber++
         
                 // Else stop the playback
                 } else {
@@ -84,5 +75,21 @@ export class IntervalTimer {
             clearInterval(this.liveSequence);
             this.isPlaying = false;
         }
+    }
+
+    calculateTimerAccuracy = (startTime, loopNumber) => {
+
+        // Calculate the error in the interval timing and work out the loop error
+        const timeElapsed = performance.now() - startTime;
+        const targetTimeStamp = (this.tempo * this.lastStepNumber * loopNumber) + (this.tempo * loopNumber);
+        const loopError = timeElapsed - targetTimeStamp;
+
+        // Track accuracy of the timer in the console
+        console.debug(
+            "Loop number:" + loopNumber, '\n',
+            "Target loop time:" + targetTimeStamp + "ms", '\n', 
+            "Actual loop time:" + timeElapsed.toFixed(1) + "ms", '\n',
+            "Error:" + loopError.toFixed(1) + "ms"
+        );
     }
 }
