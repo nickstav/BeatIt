@@ -32,6 +32,19 @@ export class IntervalTimer {
 
         this.liveSequence = setInterval(() => {
 
+            // Calculate the error in the interval timing and pass it to deltaT
+            const timeElapsed = performance.now() - startTime;
+            const targetTimeStamp = this.tempo * (this.currentStepNumber + 1);
+            this.deltaT = timeElapsed - targetTimeStamp;
+
+            // Track accuracy of the timer in the console
+            console.debug(
+                "Step number:" + (this.currentStepNumber + 1), '\n',
+                "Target step time:" + targetTimeStamp + "ms", '\n', 
+                "Actual step time:" + timeElapsed.toFixed(1) + "ms", '\n',
+                "Error:" + this.deltaT.toFixed(1) + "ms"
+            );
+
             // Carry out actionable function and move onto next step
             stepJobs(this.currentStepNumber);
             this.currentStepNumber++;
@@ -48,12 +61,7 @@ export class IntervalTimer {
                     this.stopPlayback();
                 }
 
-           } 
-
-            // Calculate the error in the interval timing and pass it to deltaT
-            const timeElapsed = performance.now() - startTime;
-            this.deltaT = timeElapsed - (this.currentStepNumber * this.tempo);
-            console.log(timeElapsed);
+           }
        
         // Use calculated interval between each step
         }, this.interval);
