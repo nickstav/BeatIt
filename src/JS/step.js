@@ -10,7 +10,8 @@ export class Step {
         this.instruments = {
             'snareDrum': new Audio('audio/snare.mp3'),
             'hiHat': new Audio('audio/hi_hat.mp3'),
-            'kickDrum': new Audio('audio/kick-drum.mp3')
+            'kickDrum': new Audio('audio/kick-drum.mp3'),
+            'drumsticks': new Audio('audio/drumsticks.mp3')
         }
         // TODO - why the below no worky for all steps..?
         /*
