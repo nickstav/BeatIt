@@ -1,5 +1,6 @@
 <script>
     import { stepSequencer } from '../JS/main.js'
+    import { saveCurrentSequence } from '../JS/saveLoad.js'
 </script>
 
 <div id="audioControls" class="w-full h-14 flex flex-row justify-center items-center select-none">
@@ -42,7 +43,7 @@
 
     <div id="buttonDivider" class="h-12 w-2"></div>
 
-    <button id="save" title="Save Sequence" style="outline: none" class=" text-white w-9 h-9" on:click={() => {stepSequencer.clearSequence()}}>
+    <button id="save" title="Save Sequence" style="outline: none" class=" text-white w-9 h-9" on:click={saveCurrentSequence}>
         <svg xmlns="http://www.w3.org/2000/svg" class="h-full w-full" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
         </svg>
