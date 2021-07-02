@@ -84,45 +84,37 @@
     }
 </style>
 
-<aside class="w-48 h-full text-xs flex flex-col">
+<div id="bpmSettings" class="w-36 h-24 flex flex-col justify-start items-center bg-gray-600 border border-gray-700 rounded-lg select-none">
 
-    <div id="optionsContainer" class="w-full h-full flex flex-col justify-start items-center">
+    <h2 class="font-bold text-white pt-2 pb-6">bpm</h2>
 
-        <div id="bpmSettings" class="w-36 h-24 flex flex-col justify-center items-center bg-gray-600 border border-gray-700 rounded-lg select-none">
-
-                <h2 class="font-bold text-white pb-2">bpm</h2>
-
-                <input type="range" bind:value={$sequencerOptions.bpm} min="60" max="180" on:change={stepSequencer.updateBPM} disabled={$stepSequencer.intervalTimer.isPlaying} class="align-middle cursor-pointer disabled:opacity-50">
-                
-                <p class="text-white pt-2">{$sequencerOptions.bpm}</p>   
-
-        </div>
-
-        <hr class="h-8">
-
-        <div id="numberOfBeats" class="w-36 h-24 flex flex-col justify-center items-center bg-gray-600 border border-gray-700 rounded-lg select-none">
-
-            <h2 class="font-bold text-white pb-2">number of beats</h2>
-
-            <label for="8" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={2} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
-                2
-            </label>
-
-            <label for="16" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={4} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
-                4
-            </label>
-
-            <label for="32" class="pb-1 text-left font-semibold text-white">
-                <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={8} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
-                8
-            </label>
-
-        </div>
-
-        <hr class="h-8">
-
-    </div>
+    <input type="range" bind:value={$sequencerOptions.bpm} min="60" max="180" on:change={stepSequencer.updateBPM} disabled={$stepSequencer.intervalTimer.isPlaying} class="align-middle cursor-pointer disabled:opacity-50">
     
-</aside>
+    <p class="text-white pt-2">{$sequencerOptions.bpm}</p>   
+
+</div>
+
+<hr class="h-8">
+
+<div id="numberOfBeats" class="w-36 h-24 flex flex-col justify-start items-center bg-gray-600 border border-gray-700 rounded-lg select-none">
+
+<h2 class="font-bold text-white py-2">number of beats</h2>
+
+<label for="8" class="pb-1 text-left font-semibold text-white">
+    <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={2} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
+    2
+</label>
+
+<label for="16" class="pb-1 text-left font-semibold text-white">
+    <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={4} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
+    4
+</label>
+
+<label for="32" class="pb-1 text-left font-semibold text-white">
+    <input type="radio" bind:group={$sequencerOptions.numberOfBeats} value={8} on:change={stepSequencer.updateSteps} disabled={$stepSequencer.intervalTimer.isPlaying} class="form-radio text-red-400 align-middle cursor-pointer disabled:opacity-50">
+    8
+</label>
+
+</div>
+
+<hr class="h-8">
