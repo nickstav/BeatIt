@@ -4,9 +4,14 @@ function setUpStore() {
 
     const { subscribe, set, update } = writable([]);
 
-    function saveCurrentSequence(sequenceName, sequenceArray) {
+    function saveCurrentSequence(sequenceName, sequenceArray, numberOfBeats, bpm) {
         update(sequences => {
-                return [...sequences, {'sequenceName': sequenceName, 'sequenceInfo': sequenceArray }]
+                return [...sequences, {
+                    'sequenceName': sequenceName, 
+                    'sequenceInfo': sequenceArray,
+                    'numberOfBeats': numberOfBeats,
+                    'bpm': bpm
+                }]
         });
     }
 

@@ -11,6 +11,16 @@ function setUpStore() {
 
     const { subscribe, set, update } = writable(defaultValues);
 
+    function updateSettingsFromSavedSequence(sequence) {
+        update(status => {
+            return {
+                ...status,
+                bpm: sequence['bpm'],
+                numberOfBeats: sequence['numberOfBeats']
+            }
+        });
+    }
+
     function toggleTrackSelection(track) {
         update(status => {
             if (status.selectedTrack != instruments[track]['label']) {
@@ -32,6 +42,7 @@ function setUpStore() {
     return {
 	    subscribe,
         set,
+        updateSettingsFromSavedSequence,
         toggleTrackSelection
     };
 
