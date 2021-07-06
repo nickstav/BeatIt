@@ -1,4 +1,6 @@
 <script>
+    import { instruments } from '../JS/instruments.js'
+    import { sequencerOptions } from '../Store/store.js'
     import { beatsArray } from '../Store/store.js'
     import { stepSequencer } from '../JS/main.js'
 
@@ -12,12 +14,13 @@
 	}
 </style>
 
-<div id="beatRow" class="flex flex-row w-full h-10 justify-start items-center">
+<div id="beatRow" class="flex flex-row w-full h-10 justify-start items-center px-2 rounded-md {$sequencerOptions.selectedTrack === instruments[instrument]['label'] ? "bg-gray-600" : ""}">
 
     <div 
     id="soundIcon" 
     title={label}
-    class="h-8 w-8 flex items-center justify-center bg-white rounded-lg"
+    class="h-8 w-8 flex items-center justify-center bg-white rounded-lg cursor-pointer"
+    on:click={() => {sequencerOptions.toggleTrackSelection(instrument)}}
     >
         <img src={img} alt="Snare Drum" class="h-6 w-6">
     </div>
