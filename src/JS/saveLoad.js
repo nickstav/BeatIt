@@ -16,7 +16,15 @@ function saveCurrentSequence() {
 
         // Store the play commands for each instrument 
         stepSequencer.steps.forEach((step) => {
-            savedSequence.push(step.playCommands);
+
+            const sequenceArray = {};
+
+            for (const [instrument, playCommand] of Object.entries(step.playCommands)) {
+                sequenceArray[instrument] = playCommand;
+            };
+
+            savedSequence.push(sequenceArray);
+
         });
 
         const bpm = get(sequencerOptions).bpm;
@@ -36,8 +44,11 @@ function loadSequence(sequence) {
     stepSequencer.updateSteps();
 
     // Add the saved play commands to the live sequencer
-    for (let i = 0; i < sequence['numberOfBeats']; i++) {
-        stepSequencer.steps[i].playCommands = sequence['sequenceInfo'][i]
+    for (let i = 0; i < sequence['numberOfBeats'] * 4; i++) {
+
+        for (const instrument of Object.keys(stepSequencer.steps[i].playCommands)) {
+            stepSequencer.steps[i].playCommands[instrument] = sequence['sequenceInfo'][i][instrument]
+        };
 
     }
 
