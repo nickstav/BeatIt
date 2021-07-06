@@ -1,5 +1,5 @@
 <script>
-    import { playSample } from '../JS/track.js';
+    import { playSample, nudgeTrack } from '../JS/track.js';
     import { sequencerOptions } from '../Store/store.js';
 
     let trackActive;
@@ -31,13 +31,13 @@
 
         <div id="nudgeButtons" class="px-2">
 
-            <button id="nudgeLeft" title="Nudge Left" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={() => {}}>
+            <button id="nudgeLeft" title="Nudge Left" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={() => {nudgeTrack('left')}}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                 </svg>
             </button>
 
-            <button id="nudgeRight" title="Nudge Right" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={() => {}}>
+            <button id="nudgeRight" title="Nudge Right" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={() => {nudgeTrack('right')}}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
