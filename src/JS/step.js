@@ -8,7 +8,7 @@ export class Step {
 
         this.instruments = {};
         for (const [instrument, data] of Object.entries(instruments)) {
-            this.instruments[instrument] = data['audio']
+            this.instruments[instrument] = data['audio'];
         }
 
         // Define boolean to instruct whether to play instrument or not for this step
@@ -19,8 +19,15 @@ export class Step {
     }
 
     // Play the required instrument(s) for this beat if has been selected
-    playStep = (trackMuted) => {
+    playStep = (trackMuted, highVolume) => {
         for (const [instrument, playCommand] of Object.entries(this.playCommands)) {
+
+            // Set volume of each instrument depending on whether "velocity" is on/off
+            if (highVolume[instrument]) {
+                this.instruments[instrument].volume = 1.0;
+            } else {
+                this.instruments[instrument].volume = 0.5;
+            }
 
             if (playCommand && !trackMuted[instrument]) {
 

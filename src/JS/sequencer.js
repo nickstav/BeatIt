@@ -27,11 +27,20 @@ export class Sequencer extends SvelteUpdatable {
         for (const instrument of Object.keys(instruments)) {
             this.trackMuted[instrument] = false;
         }
+
+        // Define boolean to instruct whether to make a track high volume
+        this.highVolume = {};
+        for (const instrument of Object.keys(instruments)) {
+            this.highVolume[instrument] = false;
+        }
     }
 
     // Toggle on/off whether audio is to be played for a given step
     toggleAudio = (instrument, stepNumber) => {
         this.steps[stepNumber].toggleAudio(instrument);
+
+        // Deselect any previously selected tracks
+        sequencerOptions.toggleTrackSelection(null)
 
         // Manually call updateUI method to see changes reflected in the UI
         this.updateUI();
@@ -79,11 +88,47 @@ export class Sequencer extends SvelteUpdatable {
         this.updateUI();
     }
 
+    // Turn on/off velocity of selected track
+    toggleVelocity = () => {
+
+        const selectedTrack = get(sequencerOptions).selectedTrack;
+
+        for (const instrument of Object.keys(instruments)) {
+
+            if (instruments[instrument]['label'] === selectedTrack) {
+                this.highVolume[instrument] = !this.trackMuted[instrument];
+            };
+
+        };
+
+        // Update UI to show effects
+        this.updateUI();
+    }
+
     // Remove all active beats from the sequence
     clearSequence = () => {
         this.steps.forEach(step => {
             for (const instrument of Object.keys(step.playCommands)) {
                 step.playCommands[instrument] = false;
+            }
+        });
+
+        // Manually call updateUI method to see changes reflected in the UI
+        this.updateUI();
+    }
+
+    // Remove all active beats from a specific instrument
+    clearTrack = () => {
+
+        const selectedTrack = get(sequencerOptions).selectedTrack;
+
+        this.steps.forEach(step => {
+            for (const instrument of Object.keys(step.playCommands)) {
+
+                if (instruments[instrument]['label'] === selectedTrack) {
+                    step.playCommands[instrument] = false;
+                };
+  
             }
         });
 
@@ -137,7 +182,7 @@ export class Sequencer extends SvelteUpdatable {
 
     // Play the beat for a given step number in the sequence
     playBeat = (stepNumber) => {
-       this.steps[stepNumber].playStep(this.trackMuted);
+       this.steps[stepNumber].playStep(this.trackMuted, this.highVolume);
 
        // Manually call updateUI method to see changes reflected in the UI
        this.updateUI();

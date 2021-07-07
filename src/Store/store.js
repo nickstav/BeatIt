@@ -23,7 +23,7 @@ function setUpStore() {
 
     function toggleTrackSelection(track) {
         update(status => {
-            if (status.selectedTrack != instruments[track]['label']) {
+            if (track != null && status.selectedTrack != instruments[track]['label']) {
 
                 return {
                     ...status,
