@@ -78,14 +78,36 @@ export class Sequencer extends SvelteUpdatable {
 
         for (const instrument of Object.keys(instruments)) {
 
-            if (instruments[instrument]['label'] != selectedTrack) {
-                this.trackMuted[instrument] = !this.trackMuted[instrument];
-            };
+            if (instruments[instrument]['label'] === selectedTrack) {
+                this.trackMuted[instrument] = false;
+            } else {
+                this.trackMuted[instrument] = !this.trackMuted[instrument]
+            }
 
         };
 
         // Update UI to show effects
         this.updateUI();
+    }
+
+    // Tell the UI if the selected track is the only non-muted track
+    isTrackSoloing = () => {
+
+        const selectedTrack = get(sequencerOptions).selectedTrack;
+
+        let allDeselectedTracksMuted = false;
+
+        for (const instrument of Object.keys(instruments)) {
+
+            if (instruments[instrument]['label'] != selectedTrack) {
+               if (this.trackMuted[instrument]) {
+                    allDeselectedTracksMuted = true;
+               }
+            };
+
+        };
+
+        return allDeselectedTracksMuted
     }
 
     // Turn on/off velocity of selected track
@@ -96,7 +118,7 @@ export class Sequencer extends SvelteUpdatable {
         for (const instrument of Object.keys(instruments)) {
 
             if (instruments[instrument]['label'] === selectedTrack) {
-                this.highVolume[instrument] = !this.trackMuted[instrument];
+                this.highVolume[instrument] = !this.highVolume[instrument];
             };
 
         };

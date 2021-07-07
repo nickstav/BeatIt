@@ -4,23 +4,13 @@
     import { stepSequencer } from '../JS/main.js';
     import { instruments } from '../JS/instruments.js'
 
-    let trackActive, currentInstrument;
+    let trackActive;
 
     $: if ($sequencerOptions.selectedTrack === null) {
-        trackActive = false;
+            trackActive = false;
         } else {
             trackActive = true;
         }
-
-    $: for (const [instrument, data] of Object.entries(instruments)) {
-            if (data['label'] === $sequencerOptions.selectedTrack) {
-                currentInstrument = instrument;
-                console.log(instrument, stepSequencer.highVolume[currentInstrument])
-            } else {
-                currentInstrument = null;
-            }
-        }
-
 </script>
 
 <div id="trackOptions" class="w-72 h-16 flex flex-col items-center bg-gray-600 border border-gray-700 rounded-lg select-none {$sequencerOptions.selectedTrack === null ? "opacity-25" : ""}">
@@ -58,13 +48,13 @@
 
         <div id="muteSoloButtons" class="px-2">
 
-            <button id="solo" title="Solo Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={stepSequencer.toggleSoloing}>
+            <button id="solo" title="Solo Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {$stepSequencer.isTrackSoloing() ? "text-red-500" : ""}" on:click={stepSequencer.toggleSoloing}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                 </svg>
             </button>
 
-            <button id="mute" title="Mute Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6" on:click={stepSequencer.toggleMuting}>
+            <button id="mute" title="Mute Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {$stepSequencer.trackMuted[$sequencerOptions.trackKey] ? "text-red-500" : ""}" on:click={stepSequencer.toggleMuting}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clip-rule="evenodd" />
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
@@ -75,7 +65,7 @@
 
         <div id="velocityButton" class="px-2">
 
-            <button id="velocity" title="Velocity (high volume)" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {$stepSequencer.highVolume[currentInstrument] ? "text-red-500" : ""}" on:click={stepSequencer.toggleVelocity}>
+            <button id="velocity" title="Velocity (high volume)" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {$stepSequencer.highVolume[$sequencerOptions.trackKey] ? "text-red-500" : ""}" on:click={stepSequencer.toggleVelocity}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current">
                     <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd" />
                 </svg>

@@ -4,7 +4,8 @@ import { instruments } from '../JS/instruments';
 const defaultValues = {
     numberOfBeats: 4,
     bpm: 120,
-    selectedTrack: null
+    selectedTrack: null,
+    trackKey: null
 };
 
 function setUpStore() {
@@ -27,13 +28,15 @@ function setUpStore() {
 
                 return {
                     ...status,
-                    selectedTrack: instruments[track]['label']
+                    selectedTrack: instruments[track]['label'],
+                    trackKey: track
                 };
 
             } else {
                 return {
                     ...status,
-                    selectedTrack: null
+                    selectedTrack: null,
+                    trackKey: null
                 };
             }
         });

@@ -16,7 +16,7 @@
 
 <div 
 id="beatRow" 
-class="flex flex-row w-full h-10 justify-start items-center px-2 rounded-md {$sequencerOptions.selectedTrack === instruments[instrument]['label'] ? "bg-gray-600" : ""} { stepSequencer.trackMuted[instrument] ? "opacity-30" : ""}"
+class="flex flex-row w-full h-10 justify-start items-center px-2 rounded-md {$sequencerOptions.selectedTrack === instruments[instrument]['label'] ? "bg-gray-600" : ""} {$stepSequencer.trackMuted[instrument] ? "opacity-30" : ""}"
 >
 
     <div 
