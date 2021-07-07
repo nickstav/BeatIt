@@ -19,10 +19,10 @@ export class Step {
     }
 
     // Play the required instrument(s) for this beat if has been selected
-    playStep = () => {
+    playStep = (trackMuted) => {
         for (const [instrument, playCommand] of Object.entries(this.playCommands)) {
 
-            if (playCommand) {
+            if (playCommand && !trackMuted[instrument]) {
 
                 // Clear the playback from any previous steps
                 this.instruments[instrument].pause();

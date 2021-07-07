@@ -3,6 +3,7 @@ import { sequencerOptions } from '../Store/store.js'
 import { IntervalTimer } from './timer.js'
 import { Step } from './step.js'
 import { SvelteUpdatable } from './svelteUpdatable.js'
+import { instruments } from "./instruments";
 
 export class Sequencer extends SvelteUpdatable {
     constructor() {
@@ -20,6 +21,12 @@ export class Sequencer extends SvelteUpdatable {
         for (let i = 0; i < this.numberOfSteps; i++) {
             this.steps.push(new Step(i));
         }
+
+        // Define boolean to instruct whether to mute a track
+        this.trackMuted = {};
+        for (const instrument of Object.keys(instruments)) {
+            this.trackMuted[instrument] = false;
+        }
     }
 
     // Toggle on/off whether audio is to be played for a given step
@@ -35,6 +42,40 @@ export class Sequencer extends SvelteUpdatable {
         this.intervalTimer.loopPlayback = !this.intervalTimer.loopPlayback;
 
         // Manually call updateUI method to see changes reflected in the UI
+        this.updateUI();
+    }
+
+    // Turn on/off muting of selected track
+    toggleMuting = () => {
+
+        const selectedTrack = get(sequencerOptions).selectedTrack;
+
+        for (const instrument of Object.keys(instruments)) {
+
+            if (instruments[instrument]['label'] === selectedTrack) {
+                this.trackMuted[instrument] = !this.trackMuted[instrument];
+            };
+
+        }
+
+        // Update UI to show effects
+        this.updateUI();
+    }
+
+    // Turn on/off muting of all other tracks other than selected
+    toggleSoloing = () => {
+
+        const selectedTrack = get(sequencerOptions).selectedTrack;
+
+        for (const instrument of Object.keys(instruments)) {
+
+            if (instruments[instrument]['label'] != selectedTrack) {
+                this.trackMuted[instrument] = !this.trackMuted[instrument];
+            };
+
+        };
+
+        // Update UI to show effects
         this.updateUI();
     }
 
@@ -96,7 +137,7 @@ export class Sequencer extends SvelteUpdatable {
 
     // Play the beat for a given step number in the sequence
     playBeat = (stepNumber) => {
-       this.steps[stepNumber].playStep();
+       this.steps[stepNumber].playStep(this.trackMuted);
 
        // Manually call updateUI method to see changes reflected in the UI
        this.updateUI();
