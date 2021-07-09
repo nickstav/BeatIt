@@ -76,12 +76,25 @@ export class Sequencer extends SvelteUpdatable {
 
         const selectedTrack = get(sequencerOptions).selectedTrack;
 
+        // Get the number of currently unmuted tracks 
+        const numberOfUnmutedTracks = Object.values(this.trackMuted).filter(bool => bool === false).length;
+
         for (const instrument of Object.keys(instruments)) {
 
+            // Ensure selected track to solo is unmuted
             if (instruments[instrument]['label'] === selectedTrack) {
                 this.trackMuted[instrument] = false;
-            } else {
-                this.trackMuted[instrument] = !this.trackMuted[instrument]
+            }
+
+            // If it is the only unmuted track, then we need to toggle soloing off by turning other tracks on
+            if (numberOfUnmutedTracks === 1) {
+
+                this.trackMuted[instrument] = false;
+            
+            // Else we need to turn soloing on by muting all other tracks
+            } else if (instruments[instrument]['label'] != selectedTrack) {
+
+                this.trackMuted[instrument] = true;
             }
 
         };
