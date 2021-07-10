@@ -5,7 +5,8 @@ const defaultValues = {
     numberOfBeats: 4,
     bpm: 120,
     selectedTrack: null,
-    trackKey: null
+    trackKey: null,
+    selectedSavedSequence: null
 };
 
 function setUpStore() {
@@ -42,11 +43,28 @@ function setUpStore() {
         });
     }
 
+    function toggleSelectedSavedSequence(sequenceIndex) {
+        update(status => {
+            if (sequenceIndex === status.selectedSavedSequence) {
+                return {
+                    ...status,
+                    selectedSavedSequence: null
+                };
+            } else {
+                return {
+                    ...status,
+                    selectedSavedSequence: sequenceIndex
+                };
+            }
+        })
+    }
+
     return {
 	    subscribe,
         set,
         updateSettingsFromSavedSequence,
-        toggleTrackSelection
+        toggleTrackSelection,
+        toggleSelectedSavedSequence
     };
 
 }

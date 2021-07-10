@@ -103,26 +103,6 @@ export class Sequencer extends SvelteUpdatable {
         this.updateUI();
     }
 
-    // Tell the UI if the selected track is the only non-muted track
-    isTrackSoloing = () => {
-
-        const selectedTrack = get(sequencerOptions).selectedTrack;
-
-        let allDeselectedTracksMuted = false;
-
-        for (const instrument of Object.keys(instruments)) {
-
-            if (instruments[instrument]['label'] != selectedTrack) {
-               if (this.trackMuted[instrument]) {
-                    allDeselectedTracksMuted = true;
-               }
-            };
-
-        };
-
-        return allDeselectedTracksMuted
-    }
-
     // Turn on/off velocity of selected track
     toggleVelocity = () => {
 

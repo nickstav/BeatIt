@@ -34,7 +34,11 @@ function saveCurrentSequence() {
     }
 }
 
-function loadSequence(sequence) {
+function loadSequence() {
+
+    // Get the selected sequence from the store
+    const sequenceIndex = get(sequencerOptions).selectedSavedSequence;
+    const sequence = get(savedSequences)[sequenceIndex];
 
     // Update the window's bpm and beats settings using the saved values for the sequence
     sequencerOptions.updateSettingsFromSavedSequence(sequence);
@@ -56,4 +60,24 @@ function loadSequence(sequence) {
     stepSequencer.updateUI();
 }
 
-export { saveCurrentSequence, loadSequence }
+// Toggle the selected sequence as saved/unsaved by reference to its position in the saved array
+function selectSequence(sequence) {
+    const savedSequencesArray = get(savedSequences);
+    const sequenceIndex = savedSequencesArray.indexOf(sequence);
+    sequencerOptions.toggleSelectedSavedSequence(sequenceIndex);
+}
+
+function deleteSequence() {
+
+    // Get the selected sequence from the store
+    const sequenceIndex = get(sequencerOptions).selectedSavedSequence;
+    const sequence = get(savedSequences)[sequenceIndex];
+
+    // Set the logged selected sequence index back to null
+    sequencerOptions.toggleSelectedSavedSequence(sequenceIndex);
+
+    // Remove sequence from the store
+    savedSequences.deleteCurrentSequence(sequence);
+}
+
+export { saveCurrentSequence, loadSequence, selectSequence, deleteSequence }

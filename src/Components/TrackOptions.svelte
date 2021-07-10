@@ -3,14 +3,19 @@
     import { sequencerOptions } from '../Store/store.js';
     import { stepSequencer } from '../JS/main.js';
     import { instruments } from '../JS/instruments.js'
-
+    
     let trackActive;
 
+    // Create a bool to disable track option buttons if not track is selected
     $: if ($sequencerOptions.selectedTrack === null) {
             trackActive = false;
-        } else {
+    } else {
             trackActive = true;
-        }
+    }
+
+    // Return a boolean stating whether only one track is unmuted
+    $: trackSoloing = (Object.values($stepSequencer.trackMuted).filter(bool => bool === false).length === 1? true : false)
+
 </script>
 
 <div id="trackOptions" class="w-72 h-16 flex flex-col items-center bg-gray-600 border border-gray-700 rounded-lg select-none {$sequencerOptions.selectedTrack === null ? "opacity-25" : ""}">
@@ -48,7 +53,7 @@
 
         <div id="muteSoloButtons" class="px-2">
 
-            <button id="solo" title="Solo Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {$stepSequencer.isTrackSoloing() ? "text-red-500" : ""}" on:click={stepSequencer.toggleSoloing}>
+            <button id="solo" title="Solo Track" disabled={!trackActive} style="outline: none" class=" text-white w-6 h-6 {trackSoloing && !$stepSequencer.trackMuted[$sequencerOptions.trackKey] ? "text-red-500" : ""}" on:click={stepSequencer.toggleSoloing}>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                 </svg>
