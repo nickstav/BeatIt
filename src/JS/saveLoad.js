@@ -1,5 +1,4 @@
-import { stepSequencer } from "./main.js";
-import { savedSequences } from "../Store/savedSequences.js";
+import { stepSequencer, localStorage } from "./main.js";
 import { sequencerOptions } from "../Store/store.js";
 import { get } from 'svelte/store';
 
@@ -27,18 +26,30 @@ function saveCurrentSequence() {
 
         });
 
+        // Get the current sequence settings
         const bpm = get(sequencerOptions).bpm;
         const numberOfBeats = get(sequencerOptions).numberOfBeats;
 
-        savedSequences.saveCurrentSequence(sequenceName, savedSequence, numberOfBeats, bpm);
+        // Create object to save to local storage
+        const sequenceData = {
+            'sequenceInfo': savedSequence,
+            'numberOfBeats': numberOfBeats,
+            'bpm': bpm
+        }
+
+        // Save sequence to local storage
+        localStorage.setItem(sequenceName, JSON.stringify(sequenceData));
     }
+
+    location.reload();
 }
 
 function loadSequence() {
 
-    // Get the selected sequence from the store
-    const sequenceIndex = get(sequencerOptions).selectedSavedSequence;
-    const sequence = get(savedSequences)[sequenceIndex];
+    // Get the selected sequence from local storage
+    const sequenceName = get(sequencerOptions).selectedSavedSequence;
+    const sequenceAsString = localStorage.getItem(sequenceName);
+    const sequence = JSON.parse(sequenceAsString);
 
     // Update the window's bpm and beats settings using the saved values for the sequence
     sequencerOptions.updateSettingsFromSavedSequence(sequence);
@@ -60,24 +71,17 @@ function loadSequence() {
     stepSequencer.updateUI();
 }
 
-// Toggle the selected sequence as saved/unsaved by reference to its position in the saved array
-function selectSequence(sequence) {
-    const savedSequencesArray = get(savedSequences);
-    const sequenceIndex = savedSequencesArray.indexOf(sequence);
-    sequencerOptions.toggleSelectedSavedSequence(sequenceIndex);
-}
-
 function deleteSequence() {
 
     // Get the selected sequence from the store
-    const sequenceIndex = get(sequencerOptions).selectedSavedSequence;
-    const sequence = get(savedSequences)[sequenceIndex];
+    const sequenceName = get(sequencerOptions).selectedSavedSequence;
+    const sequence = localStorage.getItem(sequenceName);
 
     // Set the logged selected sequence index back to null
-    sequencerOptions.toggleSelectedSavedSequence(sequenceIndex);
+    sequencerOptions.toggleSelectedSavedSequence(sequenceName);
 
-    // Remove sequence from the store
-    savedSequences.deleteCurrentSequence(sequence);
+    // Remove sequence from local storage
+    localStorage.removeItem(sequenceName);
 }
 
-export { saveCurrentSequence, loadSequence, selectSequence, deleteSequence }
+export { saveCurrentSequence, loadSequence, deleteSequence }

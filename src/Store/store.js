@@ -43,9 +43,9 @@ function setUpStore() {
         });
     }
 
-    function toggleSelectedSavedSequence(sequenceIndex) {
+    function toggleSelectedSavedSequence(sequenceName) {
         update(status => {
-            if (sequenceIndex === status.selectedSavedSequence) {
+            if (sequenceName === status.selectedSavedSequence) {
                 return {
                     ...status,
                     selectedSavedSequence: null
@@ -53,7 +53,7 @@ function setUpStore() {
             } else {
                 return {
                     ...status,
-                    selectedSavedSequence: sequenceIndex
+                    selectedSavedSequence: sequenceName
                 };
             }
         })

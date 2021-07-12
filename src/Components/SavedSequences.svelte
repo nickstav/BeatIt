@@ -1,11 +1,7 @@
 <script>
-    import { savedSequences } from '../Store/savedSequences.js';
+    import { localStorage } from '../JS/main.js';
     import { sequencerOptions } from '../Store/store.js';
-    import { loadSequence, selectSequence, deleteSequence } from '../JS/saveLoad.js';
-
-    function getSequenceIndex(sequence) {
-        return $savedSequences.indexOf(sequence);
-    }
+    import { loadSequence, deleteSequence } from '../JS/saveLoad.js';
 </script>
 
 <div id="savedSequences" class="w-36 h-40 flex flex-col justify-start items-center bg-gray-600 border border-gray-700 rounded-lg select-none">
@@ -14,9 +10,9 @@
 
     <div id="sequenceList" class="w-32 flex flex-1 flex-col mb-2 bg-gray-200 rounded-md overflow-auto">
 
-        {#each $savedSequences as sequence}
-            <div class="p-1 border-b border-gray-900 cursor-pointer {$sequencerOptions.selectedSavedSequence === $savedSequences.indexOf(sequence) ? "bg-blue-500" : ""}" on:click={()=> {selectSequence(sequence)}}>
-                {sequence['sequenceName']}
+        {#each Object.keys(localStorage) as sequenceName}
+            <div class="p-1 border-b border-gray-900 cursor-pointer {$sequencerOptions.selectedSavedSequence === sequenceName ? "bg-blue-500" : ""}" on:click={()=> {sequencerOptions.toggleSelectedSavedSequence(sequenceName)}}>
+                {sequenceName}
             </div>
         {/each}
 
